@@ -9,7 +9,8 @@ using System.IO;
     Writes the position, velocity and acceleration of the cube to a CSV file.
     
     Remark: For use in "Physics Engine" module at ZHAW, part of physics lab
-    Author: kemf 
+    Author: kemf
+    Version: 1.0
 */
 public class CubeController : MonoBehaviour
 {
