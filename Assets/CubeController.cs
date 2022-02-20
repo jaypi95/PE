@@ -5,10 +5,10 @@ using UnityEngine;
 using System.IO;
 
 /*
-    Accelerates the cube to which it is attached, modelling a harmonic oscillator.
+    Accelerates the cube to which it is attached, modelling an harmonic oscillator.
     Writes the position, velocity and acceleration of the cube to a CSV file.
     
-    Remark: For use in "Physics Engine" module at ZHAW, part of physics lab
+    Remark: For use in "Physics Engines" module at ZHAW, part of physics lab
     Author: kemf
     Version: 1.0
 */
