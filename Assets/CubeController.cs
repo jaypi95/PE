@@ -16,9 +16,9 @@ public class CubeController : MonoBehaviour
 {
     private Rigidbody rigidBody;
 
-    public int springConstant; // [N/m]
+    public int springConstant; // N/m
 
-    private float currentTimeStep; // [s]
+    private float currentTimeStep; // s
     
     private List<List<float>> timeSeries;
 
