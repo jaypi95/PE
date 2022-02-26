@@ -37,12 +37,14 @@ public class CubeController : MonoBehaviour
 
     // FixedUpdate can be called multiple times per frame
     void FixedUpdate() {
-        // Calculate acceleration for x component of force vector
-        float newXAcceleration = -rigidBody.position.x * springConstant;
-        rigidBody.AddForce(new Vector3(newXAcceleration, 0f, 0f));
+        float forceX; // N
+
+        // Calculate spring force on body for x component of force vector
+        forceX = -rigidBody.position.x * springConstant;
+        rigidBody.AddForce(new Vector3(forceX, 0f, 0f));
 
         currentTimeStep += Time.deltaTime;
-        timeSeries.Add(new List<float>() {currentTimeStep, rigidBody.position.x, rigidBody.velocity.x, newXAcceleration});
+        timeSeries.Add(new List<float>() {currentTimeStep, rigidBody.position.x, rigidBody.velocity.x, forceX});
     }
 
     void OnApplicationQuit() {
