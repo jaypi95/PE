@@ -53,7 +53,7 @@ public class CubeController : MonoBehaviour
 
     void WriteTimeSeriesToCSV() {
         using (var streamWriter = new StreamWriter("time_series.csv")) {
-            streamWriter.WriteLine("t,x(t),v(t),a(t) (added)");
+            streamWriter.WriteLine("t,x(t),v(t),F(t) (added)");
             
             foreach (List<float> timeStep in timeSeries) {
                 streamWriter.WriteLine(string.Join(",", timeStep));
