@@ -2,42 +2,46 @@ using UnityEngine;
 
 public class CameraFollow : MonoBehaviour
 {
-    public Transform targetObject;
-    public Transform springObject;
-    public float zoomDistanceThreshold;
-    public float zoomSpeed;
-    public float zoomFactor;
+    [SerializeField] private Transform targetObject;
+    [SerializeField] private Transform springObject;
+    [SerializeField] private float zoomDistanceThreshold = 2.0f;
+    [SerializeField] private float zoomSpeed = 2.0f;
+    [SerializeField] private float zoomFactor = 0.5f;
 
     private Vector3 _initialOffset;
-    private Vector3 _cameraPosition;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        zoomDistanceThreshold = 2.0f;
-        zoomSpeed = 2.0f;
-        zoomFactor = 0.5f;
         _initialOffset = transform.position - targetObject.position;
     }
 
-    // Update is called once per frame
-    void FixedUpdate()
+    private void FixedUpdate()
     {
-        _cameraPosition = targetObject.position + _initialOffset;
-        var transform1 = transform;
-        transform1.position = _cameraPosition;
+        UpdateCameraPosition();
+        ZoomIfNeeded();
+    }
 
-        // Check the distance between the camera and the Spring object
-        var distanceToSpring = Vector3.Distance(transform1.position, springObject.position);
+    private void UpdateCameraPosition()
+    {
+        var newPosition = targetObject.position + _initialOffset;
+        transform.position = newPosition;
+    }
 
-        if (!(distanceToSpring < zoomDistanceThreshold)) return;
-        // Calculate a new camera position based on the distance to the Spring object
+    private void ZoomIfNeeded()
+    {
+        var distanceToSpring = Vector3.Distance(transform.position, springObject.position);
+
+        if (distanceToSpring >= zoomDistanceThreshold) return;
+        UpdateZoomPosition(distanceToSpring);
+    }
+
+    private void UpdateZoomPosition(float distanceToSpring)
+    {
         var position = transform.position;
         Vector3 springDirection = (springObject.position - position).normalized;
         float zoomAmount = (zoomDistanceThreshold - distanceToSpring) * zoomFactor;
         Vector3 zoomPosition = position + springDirection * zoomAmount;
 
-        // Smoothly move the camera to the new zoom position
         position = Vector3.Lerp(position, zoomPosition, Time.deltaTime * zoomSpeed);
         transform.position = position;
     }

@@ -1,32 +1,32 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using DefaultNamespace;
 using UnityEngine;
-using UnityEngine.SceneManagement;
 
 public class Wuerfel2Controller : MonoBehaviour
 {
     private Rigidbody _rigidbody;
-    private Statistics _statisticsVelocityX { get; set; }
-    private Statistics _statisticsImpulseX { get; set; }
-    private Statistics _statisticsPositionX { get; set; }
+    private Statistics _statisticsVelocityX;
+    private Statistics _statisticsImpulseX;
+    private Statistics _statisticsPositionX;
 
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         _rigidbody = GetComponent<Rigidbody>();
-        _statisticsVelocityX = new(_rigidbody.name, "velocity", "v", "x");
-        _statisticsImpulseX = new(_rigidbody.name, "impulse", "F", "x");
-        _statisticsPositionX = new(_rigidbody.name, "position", "r", "x");
+        InitializeStatistics();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void InitializeStatistics()
     {
+        _statisticsVelocityX = new Statistics(_rigidbody.name, "velocity", "v", "x");
+        _statisticsImpulseX = new Statistics(_rigidbody.name, "impulse", "F", "x");
+        _statisticsPositionX = new Statistics(_rigidbody.name, "position", "r", "x");
     }
 
     private void FixedUpdate()
+    {
+        UpdateStatistics();
+    }
+
+    private void UpdateStatistics()
     {
         _statisticsVelocityX.AddTimeStep(Time.time, _rigidbody.velocity.x);
         _statisticsImpulseX.AddTimeStep(Time.time, _rigidbody.mass * _rigidbody.velocity.x);
@@ -36,11 +36,21 @@ public class Wuerfel2Controller : MonoBehaviour
     private void OnCollisionEnter(Collision collision)
     {
         if (!collision.gameObject.CompareTag("Wuerfel1")) return;
+        AttachToCollidingObject(collision);
+    }
+
+    private void AttachToCollidingObject(Collision collision)
+    {
         var fixedJoint = gameObject.AddComponent<FixedJoint>();
         fixedJoint.connectedBody = collision.gameObject.GetComponent<Rigidbody>();
     }
 
-    void OnApplicationQuit()
+    private void OnApplicationQuit()
+    {
+        WriteStatisticsToCsv();
+    }
+
+    private void WriteStatisticsToCsv()
     {
         _statisticsVelocityX.WriteTimeSeriesToCsv();
         _statisticsImpulseX.WriteTimeSeriesToCsv();

@@ -36,15 +36,24 @@ public class SpringController : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!_isCompressed) return;
-        var velocity = collidingRigidbody.velocity;
-        collidingRigidbody.velocity = new Vector3(velocity.x- compressionSpeed, velocity.y, velocity.z);
-        var compressionLength = initialLength - Mathf.Abs(transform.position.x - collidingRigidbody.position.x);
-        if (compressionLength < 0) return;
-        _isCompressing = compressionLength > 0.01f;
-        if (!_isCompressing) return;
-        var force = springConstant * compressionLength;
-        _springRigidbody.AddForce(force, 0, 0);
-        
+        if (_isCompressed)
+        {
+            Vector3 velocity = collidingRigidbody.velocity;
+            collidingRigidbody.velocity = new Vector3(velocity.x - compressionSpeed, velocity.y, velocity.z);
+
+            float compressionLength = initialLength - Mathf.Abs(transform.position.x - collidingRigidbody.position.x);
+
+            if (compressionLength >= 0)
+            {
+                bool isCompressing = compressionLength > 0.01f;
+
+                if (isCompressing)
+                {
+                    float force = springConstant * compressionLength;
+                    _springRigidbody.AddForce(force, 0, 0);
+                }
+            }
+        }
     }
+
 }

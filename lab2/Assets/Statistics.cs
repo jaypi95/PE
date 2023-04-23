@@ -11,7 +11,6 @@ namespace DefaultNamespace
         private readonly string _type;
         private readonly string _typeID;
         private readonly string _axis;
-        
 
         public Statistics(string objectName, string type, string typeID, string axis)
         {
@@ -20,27 +19,22 @@ namespace DefaultNamespace
             _typeID = typeID;
             _axis = axis;
         }
-        
-        
+
         public void AddTimeStep(float time, float yValue)
         {
             _timeSeries.Add(new List<float>() {time, yValue});
         }
-        
-        
-        public void WriteTimeSeriesToCsv() {
+
+        public void WriteTimeSeriesToCsv()
+        {
             var fileName = $"time_series_{_objectName}_{_type}_{_axis}.csv";
-            using var streamWriter = new StreamWriter(string.Format("{0}/{1}", Application.dataPath, fileName));
-            streamWriter.NewLine = null;
-            streamWriter.AutoFlush = false;
-            streamWriter.NewLine = null;
-            streamWriter.AutoFlush = false;
+            using var streamWriter = new StreamWriter(Path.Combine(Application.dataPath, fileName));
             streamWriter.WriteLine($"t,{_typeID}(t)");
-            foreach (var timeStep in _timeSeries) {
+            foreach (var timeStep in _timeSeries)
+            {
                 streamWriter.WriteLine(string.Join(",", timeStep));
                 streamWriter.Flush();
             }
         }
-        
     }
 }
